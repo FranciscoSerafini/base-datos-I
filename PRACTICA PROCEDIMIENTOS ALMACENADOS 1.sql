@@ -75,7 +75,8 @@ BEGIN
 		a.articulo 
 
 	--insertamos los datos
-	INSERT INTO temp_ventasanuales (ARTICULO, CANTIDAD, IMPORTE)
+	INSERT INTO temp_ventasanuales
+		(articulo, cantidad, importe)
 		SELECT
 		a.articulo AS 'ARTICULO',
 		vt.cantidad AS 'CANTIDAD',
@@ -103,3 +104,5 @@ select fecha from vencab
 
 EXEC sp_ventasanuales @FECHA = '2004-09-15T00:00:00';
 SELECT * FROM temp_ventasanuales
+
+--
