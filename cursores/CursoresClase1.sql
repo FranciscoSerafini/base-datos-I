@@ -1,0 +1,1 @@
+--adaptar al procedimiento almacenado un cursor

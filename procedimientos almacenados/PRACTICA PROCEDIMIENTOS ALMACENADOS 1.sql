@@ -125,6 +125,8 @@ resumen de las filas insertadas.
 --crear tabla insert into
 --validar existencia de la tabla y manejo de errores
 
+
+
 select fecha from vencab 
 select articulo,cantidad,factura from vendet 
 		SELECT 
@@ -150,7 +152,7 @@ select articulo,cantidad,factura from vendet
 			
 		
 			
-
+USE Ventas2
 
 CREATE OR ALTER PROCEDURE sp_ArticulosSinVentas
 	@año int
@@ -161,10 +163,9 @@ SET NOCOUNT ON
 DECLARE @filas int 
 
 BEGIN TRY
-	BEGIN TRANSACTION
-		IF OBJECT_ID('TempArticulosSinVentas') IS NOT NULL
-			TRUNCATE TABLE TempArticulosSinVentas;
-		ELSE
+	IF OBJECT_ID('TempArticulosSinVentas') IS NOT NULL
+		DROP TABLE TempArticulosSinVentas;
+		BEGIN TRANSACTION
 			SELECT 
 				a.articulo AS 'Articulo',
 				a.nombre AS 'Nombre del Articulo',
@@ -182,7 +183,7 @@ BEGIN TRY
 				vencab AS vc ON vc.letra = vt.letra AND vc.factura = vt.factura
 			WHERE
 				YEAR(vc.fecha) = @año AND
-				vc.anulada = 0 AND
+				vc.anulada = 1 OR
 				vc.total = 0
 			--
 			SET @filas = @@ROWCOUNT
@@ -196,5 +197,10 @@ BEGIN CATCH
 	ROLLBACK TRANSACTION
 	PRINT 'Se produjo un error. El error es: ' + ERROR_MESSAGE() + '.'
 END CATCH
-EXEC sp_ArticulosSinVentas 2009
+EXEC sp_ArticulosSinVentas 2004
 SELECT * FROM TempArticulosSinVentas
+
+--Resolucion del profe
+--si un articulo no esta en VENDET es porque no se vendio
+--en vencab encontramos la fecha
+--realizar la subconsulta
